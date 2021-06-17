@@ -32,20 +32,6 @@ const getDatabase = async () => {
   })
 }
 
-const deleteTodo = async todo => {
-  const db = await getDatabase()
-
-  return new Promise(resolve => {
-    let transaction = db.transaction([ITEM_NAME], 'readwrite')
-    transaction.oncomplete = () => {
-      resolve()
-    }
-
-    let store = transaction.objectStore(ITEM_NAME)
-    store.delete(todo.id)
-  })
-}
-
 const getTodos = async () => {
   const db = await getDatabase()
 
@@ -65,6 +51,20 @@ const getTodos = async () => {
         cursor.continue()
       }
     }
+  })
+}
+
+const deleteTodo = async todo => {
+  const db = await getDatabase()
+
+  return new Promise(resolve => {
+    let transaction = db.transaction([ITEM_NAME], 'readwrite')
+    transaction.oncomplete = () => {
+      resolve()
+    }
+
+    let store = transaction.objectStore(ITEM_NAME)
+    store.delete(todo.id)
   })
 }
 
