@@ -64,6 +64,25 @@ export default {
       todo.title = this.beforeEditCache
     },
 
+    async deleteTodo(todo) {
+      this.database = await this.getDatabase()
+
+      return new Promise((resolve, reject) => {
+        const transaction = this.database.transaction('todos', 'readwrite')
+        const store = transaction.objectStore('todos')
+
+        store.delete(todo.id)
+
+        transaction.oncomplete = () => {
+          resolve('Item successfully deleted.')
+        }
+
+        transaction.onerror = event => {
+          reject(event)
+        }
+      })
+    },
+
     doneEdit(todo) {
       if (!this.editedTodo) {
         return
@@ -145,13 +164,18 @@ export default {
 
     removeCompleted() {
       this.todos = this.todos.filter(item => {
-        return !item.completed
+        if (item.completed) {
+          this.deleteTodo(item)
+        } else {
+          return !item.completed
+        }
       })
     },
 
     removeTodo(todo) {
       const index = this.todos.indexOf(todo)
       this.todos.splice(index, 1)
+      this.deleteTodo(todo)
     },
 
     async saveTodo(todo) {
