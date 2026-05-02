@@ -1,3 +1,5 @@
+**This repository is for learning purposes only, it's not for production use.**
+
 # Progressive Web Apps with Vue 3
 
 ## Project setup
@@ -28,4 +30,3 @@ yarn lint
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-**This repository is for learning purposes only, it's not for production use.**
