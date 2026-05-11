@@ -46,7 +46,7 @@ export default {
     addTodo() {
       const value = this.newTodo && this.newTodo.trim()
       const todoItem = {
-        id: this.todos.length + 1,
+        id: this.todos.length,
         title: value,
         completed: false
       }
@@ -169,6 +169,7 @@ export default {
         } else {
           return !item.completed
         }
+        this.sortDatabaseIds()
       })
     },
 
@@ -176,6 +177,7 @@ export default {
       const index = this.todos.indexOf(todo)
       this.todos.splice(index, 1)
       this.deleteTodo(todo)
+      this.sortDatabaseIds()
     },
 
     async saveTodo(todo) {
@@ -196,6 +198,19 @@ export default {
         }
       })
     },
+    
+    sortDatabaseIds() {
+      for (let i = 0; i < this.todos.length; i++) {
+        const workTodo = this.todos[i]
+        if (workTodo.id !== i) {
+          this.deleteTodo(workTodo)
+          this.saveData({
+            ...workTodo,
+            id : i
+          })
+        }
+      }
+    }
 
     updateTodo(todo) {
       this.todos.find(item => item === todo).completed = !todo.completed
